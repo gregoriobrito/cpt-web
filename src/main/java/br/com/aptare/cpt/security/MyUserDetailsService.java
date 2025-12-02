@@ -20,10 +20,6 @@ public class MyUserDetailsService implements UserDetailsService {
         Usuario user = usuarioRepository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getNome())
-                .password(user.getSenha()) // senha criptografada no banco
-                .roles("ADMIN")
-                .build();
+        return new UserPrincipal(user);
     }
 }
