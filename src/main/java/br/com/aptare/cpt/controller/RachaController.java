@@ -27,9 +27,7 @@ public class RachaController {
     @GetMapping
     public List<Racha> listarRacha() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         UserPrincipal user = (UserPrincipal) auth.getPrincipal();
-        Long idUsuario = user.getId();
 
         List<Racha> listaRacha = rachaRepository.listarPorUsuario(user.getId());
         return listaRacha;
