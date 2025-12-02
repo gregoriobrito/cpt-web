@@ -16,9 +16,6 @@ public class TimeUsuario {
     @SequenceGenerator(name = "SQ_TIM_USR", sequenceName = "SC_RCH.SQ_TIM_USR")
     private Long codigo;
 
-    @Column(name = "NR_PNT_IND")
-    private Integer pontosIndividuais;
-
     @Column(name = "CD_TIM")
     private Long codigoTime;
 

@@ -19,7 +19,7 @@ public class Time {
     @Column(name = "NM_TIM")
     private String nome;
 
-    @Column(name = "NR_PNT_TIM")
+    @Column(name = "PNT_TIM")
     private Integer pontuacao;
 
     @Column(name = "CD_PRT")
