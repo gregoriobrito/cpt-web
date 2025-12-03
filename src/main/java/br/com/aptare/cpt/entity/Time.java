@@ -5,18 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(schema = "SC_RCH", name = "TBL_TIM")
+@Table(schema = "SC_PRT", name = "TBL_TIM")
 @Getter
 @Setter
 public class Time {
 
     @Id
     @Column(name = "CD_TIM")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "SQ_TIM")
-    @SequenceGenerator(name = "SQ_TIM", sequenceName = "SC_RCH.SQ_TIM")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TIM")
+    @SequenceGenerator(name = "SQ_TIM", sequenceName = "SC_PRT.SQ_TIM", allocationSize = 1)
     private Long codigo;
 
-    @Column(name = "NM_TIM")
+    @Column(name = "IDT_TIM")
     private String nome;
 
     @Column(name = "PNT_TIM")
@@ -28,4 +28,7 @@ public class Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CD_PRT", insertable = false, updatable = false)
     private Partida partida;
+
+    @Column(name = "ST_TIM")
+    private Integer situacao;
 }

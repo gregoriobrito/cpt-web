@@ -12,8 +12,8 @@ public class Racha {
 
     @Id
     @Column(name = "CD_RCH")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "SQ_RCH")
-    @SequenceGenerator(name = "SQ_RCH", sequenceName = "SC_RCH.SQ_RCH")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_RCH")
+    @SequenceGenerator(name = "SQ_RCH", sequenceName = "SC_RCH.SQ_RCH", allocationSize = 1)
     private Long codigo;
 
     @Column(name = "NM_RCH")
