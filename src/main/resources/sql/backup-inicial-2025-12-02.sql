@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.25
 -- Dumped by pg_dump version 14.4
 
--- Started on 2025-12-02 20:04:11 -03
+-- Started on 2025-12-03 00:25:15 -03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -103,9 +103,9 @@ SET default_tablespace = '';
 CREATE TABLE sc_prt.tbl_prt (
     cd_prt numeric(10,0) NOT NULL,
     cd_rch numeric(10,0) NOT NULL,
-    idt_rch character varying(200) NOT NULL,
-    dt_rch timestamp without time zone NOT NULL,
-    st_rch numeric(2,0) NOT NULL
+    idt_prt character varying(200) NOT NULL,
+    dt_prt timestamp without time zone NOT NULL,
+    st_prt numeric(2,0) NOT NULL
 );
 
 
@@ -121,7 +121,7 @@ CREATE TABLE sc_prt.tbl_tim (
     cd_prt numeric(10,0) NOT NULL,
     idt_tim character varying(200) NOT NULL,
     pnt_tim numeric(5,0) NOT NULL,
-    st_prt numeric(2,0) NOT NULL
+    st_tim numeric(2,0) NOT NULL
 );
 
 
@@ -240,7 +240,8 @@ ALTER TABLE sc_sgr.tbl_usr OWNER TO cpt;
 -- Data for Name: tbl_prt; Type: TABLE DATA; Schema: sc_prt; Owner: cpt
 --
 
-COPY sc_prt.tbl_prt (cd_prt, cd_rch, idt_rch, dt_rch, st_rch) FROM stdin;
+COPY sc_prt.tbl_prt (cd_prt, cd_rch, idt_prt, dt_prt, st_prt) FROM stdin;
+11	1	01 - 03/12/2025	2025-12-03 00:21:21.846	1
 \.
 
 
@@ -250,7 +251,9 @@ COPY sc_prt.tbl_prt (cd_prt, cd_rch, idt_rch, dt_rch, st_rch) FROM stdin;
 -- Data for Name: tbl_tim; Type: TABLE DATA; Schema: sc_prt; Owner: cpt
 --
 
-COPY sc_prt.tbl_tim (cd_tim, cd_prt, idt_tim, pnt_tim, st_prt) FROM stdin;
+COPY sc_prt.tbl_tim (cd_tim, cd_prt, idt_tim, pnt_tim, st_tim) FROM stdin;
+16	11	GG/WAN	0	1
+17	11	JES/GUS	0	1
 \.
 
 
@@ -261,6 +264,10 @@ COPY sc_prt.tbl_tim (cd_tim, cd_prt, idt_tim, pnt_tim, st_prt) FROM stdin;
 --
 
 COPY sc_prt.tbl_tim_usr (cd_tim_usr, cd_tim, cd_usr, st_tim_usr) FROM stdin;
+26	16	1	1
+27	16	2	1
+28	17	3	1
+29	17	4	1
 \.
 
 
@@ -311,7 +318,7 @@ COPY sc_sgr.tbl_usr (cd_usr, nm_usr, apl_usr, st_usr, lgn_usr, snh_usr) FROM std
 -- Name: sq_prt; Type: SEQUENCE SET; Schema: sc_prt; Owner: cpt
 --
 
-SELECT pg_catalog.setval('sc_prt.sq_prt', 1, false);
+SELECT pg_catalog.setval('sc_prt.sq_prt', 11, true);
 
 
 --
@@ -320,7 +327,7 @@ SELECT pg_catalog.setval('sc_prt.sq_prt', 1, false);
 -- Name: sq_tim; Type: SEQUENCE SET; Schema: sc_prt; Owner: cpt
 --
 
-SELECT pg_catalog.setval('sc_prt.sq_tim', 1, false);
+SELECT pg_catalog.setval('sc_prt.sq_tim', 17, true);
 
 
 --
@@ -329,7 +336,7 @@ SELECT pg_catalog.setval('sc_prt.sq_tim', 1, false);
 -- Name: sq_tim_usr; Type: SEQUENCE SET; Schema: sc_prt; Owner: cpt
 --
 
-SELECT pg_catalog.setval('sc_prt.sq_tim_usr', 1, false);
+SELECT pg_catalog.setval('sc_prt.sq_tim_usr', 29, true);
 
 
 --
@@ -479,7 +486,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-12-02 20:04:31 -03
+-- Completed on 2025-12-03 00:25:33 -03
 
 --
 -- PostgreSQL database dump complete
