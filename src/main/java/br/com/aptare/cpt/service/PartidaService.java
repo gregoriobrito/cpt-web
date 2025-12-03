@@ -63,6 +63,8 @@ public class PartidaService {
         String nomeTime = "";
         String conector = "";
         TimeUsuario timeUsuarioAdd = null;
+        String nomePartida = "";
+        String conectorPartida = "";
 
         if (request.getListaTime() != null
                 && !request.getListaTime().isEmpty()) {
@@ -91,6 +93,9 @@ public class PartidaService {
 
                 time = timeRepository.save(time);
 
+                nomePartida += conectorPartida + nomeTime;
+                conectorPartida = " x ";
+
                 // cadastrar usuario do time
                 for(Usuario eUsuario : listaUsuarioTime) {
                     timeUsuarioAdd = new TimeUsuario();
@@ -102,6 +107,9 @@ public class PartidaService {
                 }
             }
         }
+
+        partida.setIdentificador(String.format("%02d", quantidade) + " - " + nomePartida);
+        partida = partidaRepository.save(partida);
 
         return partida;
     }
