@@ -62,7 +62,6 @@ public class PartidaService {
         List<Long> codigoUsuarioIn = null;
         String nomeTime = "";
         String conector = "";
-        List<TimeUsuario> listaTimeUsuario = null;
         TimeUsuario timeUsuarioAdd = null;
 
         if (request.getListaTime() != null
@@ -78,7 +77,6 @@ public class PartidaService {
 
                 nomeTime = "";
                 conector = "";
-                listaTimeUsuario = new ArrayList<TimeUsuario>();
                 List<Usuario> listaUsuarioTime = usuarioRepository.listarIn(codigoUsuarioIn);
                 for(Usuario eUsuario : listaUsuarioTime) {
                     nomeTime += conector + eUsuario.getApelido();
