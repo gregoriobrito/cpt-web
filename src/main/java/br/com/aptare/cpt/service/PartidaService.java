@@ -8,9 +8,7 @@ import br.com.aptare.cpt.repository.PartidaRepository;
 import br.com.aptare.cpt.repository.TimeRepository;
 import br.com.aptare.cpt.repository.TimeUsuarioRepository;
 import br.com.aptare.cpt.repository.UsuarioRepository;
-import br.com.aptare.cpt.request.PartidaRequest;
-import br.com.aptare.cpt.request.TimeRequest;
-import br.com.aptare.cpt.request.UsuarioRequest;
+import br.com.aptare.cpt.request.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -114,4 +112,29 @@ public class PartidaService {
 
         return partida;
     }
+
+    @Transactional
+    public Partida atualizarPonto(AtualizarPontoRequest request) {
+
+        Long codigoPartida = null;
+
+        if (request != null && request.getLista() != null &&  request.getLista().size() > 0) {
+            for (DetalheAtualizarPontoRequest elemento : request.getLista()) {
+                Time time = timeRepository.findById(elemento.getIdTime())
+                        .orElseThrow(() -> new RuntimeException("Time não encontrado com id: " + elemento.getIdTime()));
+                time.setPontuacao(elemento.getPontos());
+                timeRepository.save(time);
+                codigoPartida = time.getCodigoPartida();
+            }
+
+        }
+
+        Partida retorno = new Partida();
+        retorno.setCodigo(codigoPartida);
+        return retorno;
+
+    }
+
+
+
 }
