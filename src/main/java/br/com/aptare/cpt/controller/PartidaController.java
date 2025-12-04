@@ -3,6 +3,7 @@ package br.com.aptare.cpt.controller;
 import br.com.aptare.cpt.dto.PartidaDTO;
 import br.com.aptare.cpt.entity.Partida;
 import br.com.aptare.cpt.repository.PartidaRepository;
+import br.com.aptare.cpt.request.AtualizarPontoRequest;
 import br.com.aptare.cpt.request.PartidaRequest;
 import br.com.aptare.cpt.service.PartidaService;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,11 @@ public class PartidaController {
         return partidaRepository.findWithListaTimeByCodigo(id)
                 .orElseThrow(() -> new RuntimeException("Partida não encontrada"));
     }
+
+    @PostMapping("atualizarPonto")
+    public Partida atualizarPonto(@RequestBody AtualizarPontoRequest request) {
+        return partidaService.atualizarPonto(request);
+    }
+
 
 }
