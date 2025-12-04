@@ -88,7 +88,7 @@ public class PartidaService {
                 Time time = new Time();
                 time.setCodigoPartida(partida.getCodigo());
                 time.setPontuacao(0);
-                time.setNome(nomeTime);
+                time.setIdentificador(nomeTime);
                 time.setSituacao(1);
 
                 time = timeRepository.save(time);
@@ -108,7 +108,8 @@ public class PartidaService {
             }
         }
 
-        partida.setIdentificador(String.format("%02d", quantidade) + " - " + nomePartida);
+        //partida.setIdentificador(String.format("%02d", quantidade) + " - " + nomePartida);
+        partida.setIdentificador(nomePartida);
         partida = partidaRepository.save(partida);
 
         return partida;

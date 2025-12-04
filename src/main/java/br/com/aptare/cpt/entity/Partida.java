@@ -1,9 +1,13 @@
 package br.com.aptare.cpt.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
+
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "SC_PRT", name = "TBL_PRT")
@@ -20,6 +24,9 @@ public class Partida {
     @Column(name = "DT_PRT")
     private Date data;
 
+    @Formula("CAST(DT_PRT AS DATE)")
+    private Date dataSemHora;
+
     @Column(name = "IDT_PRT")
     private String identificador;
 
@@ -32,5 +39,10 @@ public class Partida {
 
     @Column(name = "ST_PRT")
     private Integer situacao;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CD_PRT", insertable = false, updatable = false)
+    @JsonManagedReference
+    private List<Time> listaTime;
 
 }

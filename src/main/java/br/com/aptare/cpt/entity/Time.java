@@ -1,5 +1,6 @@
 package br.com.aptare.cpt.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class Time {
     private Long codigo;
 
     @Column(name = "IDT_TIM")
-    private String nome;
+    private String identificador;
 
     @Column(name = "PNT_TIM")
     private Integer pontuacao;
@@ -27,6 +28,7 @@ public class Time {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CD_PRT", insertable = false, updatable = false)
+    @JsonBackReference
     private Partida partida;
 
     @Column(name = "ST_TIM")

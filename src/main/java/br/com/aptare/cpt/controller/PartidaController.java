@@ -1,17 +1,16 @@
 package br.com.aptare.cpt.controller;
 
+import br.com.aptare.cpt.dto.PartidaDTO;
 import br.com.aptare.cpt.entity.Partida;
-import br.com.aptare.cpt.entity.Racha;
 import br.com.aptare.cpt.repository.PartidaRepository;
 import br.com.aptare.cpt.request.PartidaRequest;
-import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.PartidaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/partida")
@@ -21,14 +20,26 @@ public class PartidaController {
     private final PartidaRepository partidaRepository;
     private final PartidaService partidaService;
 
-    @GetMapping("{id}")
-    public List<Partida> listarPartidas(@PathVariable Long id) {
-        return partidaRepository.listarPartidaRacha(id);
+    @GetMapping({"racha/{idRacha}", "racha/{idRacha}/{idPartida}"})
+    public List<PartidaDTO> listarPartidas(
+            @PathVariable Long idRacha,
+            @PathVariable(name = "idPartida", required = false) Long idPartida) {
+
+        return partidaRepository.listarPartidaRacha(idRacha, idPartida)
+                .stream()
+                .map(PartidaDTO::fromEntity)
+                .toList();
     }
 
     @PostMapping
     public Partida cadastrar(@RequestBody PartidaRequest request) {
-        Partida retorno = partidaService.cadastrar(request);
-        return retorno;
+        return partidaService.cadastrar(request);
     }
+
+    @GetMapping("{id}")
+    public Partida get(@PathVariable Long id) {
+        return partidaRepository.findWithListaTimeByCodigo(id)
+                .orElseThrow(() -> new RuntimeException("Partida não encontrada"));
+    }
+
 }
