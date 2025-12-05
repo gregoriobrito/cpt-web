@@ -129,9 +129,7 @@ public class PartidaService {
 
         }
 
-        Partida retorno = new Partida();
-        retorno.setCodigo(codigoPartida);
-        return retorno;
+        return partidaRepository.findById(codigoPartida).orElseThrow(() -> new RuntimeException("Partida não encontrada"));
 
     }
 
