@@ -3,6 +3,8 @@ package br.com.aptare.cpt.controller;
 import br.com.aptare.cpt.dto.RelatorioDTO;
 import br.com.aptare.cpt.dto.ResultadoAgrupadoDTO;
 import br.com.aptare.cpt.dto.ResultadoDTO;
+import br.com.aptare.cpt.entity.Racha;
+import br.com.aptare.cpt.repository.RachaRepository;
 import br.com.aptare.cpt.repository.RelatorioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import java.util.List;
 public class RelatorioController {
 
     private final RelatorioRepository relatorioRepository;
+    private final RachaRepository rachaRepository;
 
     @GetMapping("geral/{idRacha}")
     public RelatorioDTO relatorioGeral(@PathVariable Long idRacha) {
@@ -31,8 +34,10 @@ public class RelatorioController {
             retorno = new RelatorioDTO();
             retorno.setNomeRelatorio("Estatística Geral");
 
+            Racha racha = rachaRepository.findById(idRacha).orElseThrow(() -> new RuntimeException("Racha não encontrado"));
+
             ResultadoAgrupadoDTO add = new ResultadoAgrupadoDTO();
-            add.setAgrupador("CAPIVARA CARRAPATO");
+            add.setAgrupador(racha.getNome());
             add.setListaResultado(listaBanco);
 
             retorno.setLista(new ArrayList<ResultadoAgrupadoDTO>());
