@@ -2,11 +2,15 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-# Copia o JAR para dentro da imagem
+ENV TZ=America/Fortaleza
+
+# Instala o tzdata para aplicar corretamente o timezone
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY cpt-web.jar app.jar
 
-# Expõe a porta (opcional)
 EXPOSE 8080
 
-# Comando para rodar
 ENTRYPOINT ["java", "-jar", "app.jar"]
