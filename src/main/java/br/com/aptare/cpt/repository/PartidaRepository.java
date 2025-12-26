@@ -4,8 +4,10 @@ import br.com.aptare.cpt.entity.Partida;
 import br.com.aptare.cpt.entity.Time;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -22,4 +24,8 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
     @EntityGraph(attributePaths = { "listaTime", "racha" })
     Optional<Partida> findWithListaTimeByCodigo(Long codigo);
 
+    @Modifying
+    @Transactional
+    @Query("update Partida p set p.situacao = 2 where p.codigo = :idPartida")
+    int excluir(@Param("idPartida") Long idPartida);
 }

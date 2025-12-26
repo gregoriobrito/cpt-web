@@ -1,6 +1,5 @@
 package br.com.aptare.cpt.request;
 
-import br.com.aptare.cpt.entity.Time;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,8 @@ import java.util.List;
 public class PartidaRequest {
 
     private Long codigoRacha;
+
+    private Long codigo;
 
     private List<TimeRequest> listaTime;
 }

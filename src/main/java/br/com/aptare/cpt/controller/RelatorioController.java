@@ -49,15 +49,30 @@ public class RelatorioController {
 
     @GetMapping("data/{idRacha}")
     public RelatorioDTO relatorioData(@PathVariable Long idRacha) {
-        RelatorioDTO retorno = null;
-
         List<ResultadoDTO> listaBanco = relatorioRepository.listarRelatorioData(idRacha);
+        return agrupar(listaBanco, "Estatística por Data");
+    }
+
+    @GetMapping("mes/{idRacha}")
+    public RelatorioDTO relatorioMes(@PathVariable Long idRacha) {
+        List<ResultadoDTO> listaBanco = relatorioRepository.listarRelatorioMes(idRacha);
+        return agrupar(listaBanco, "Estatística por Mês");
+    }
+
+    @GetMapping("ano/{idRacha}")
+    public RelatorioDTO relatorioAno(@PathVariable Long idRacha) {
+        List<ResultadoDTO> listaBanco = relatorioRepository.listarRelatorioAno(idRacha);
+        return agrupar(listaBanco, "Estatística por Ano");
+    }
+
+    private RelatorioDTO agrupar(List<ResultadoDTO> listaBanco, String nomeRelatorio) {
+        RelatorioDTO retorno = null;
 
         String agrupador = "";
         if (listaBanco != null
                 && !listaBanco.isEmpty()) {
             retorno = new RelatorioDTO();
-            retorno.setNomeRelatorio("Estatística por Data");
+            retorno.setNomeRelatorio(nomeRelatorio);
             retorno.setLista(new ArrayList<ResultadoAgrupadoDTO>());
 
             ResultadoAgrupadoDTO add = null;
