@@ -57,5 +57,12 @@ public class PartidaController {
         return partidaService.atualizarPonto(request);
     }
 
+    @PostMapping("excluir")
+    public void excluir(@RequestBody PartidaRequest request) {
+        int afetadas = partidaRepository.excluir(request.getCodigo());
+        if (afetadas == 0) {
+            throw new RuntimeException("Partida não encontrada para excluir: " + request.getCodigo());
+        }
+    }
 
 }

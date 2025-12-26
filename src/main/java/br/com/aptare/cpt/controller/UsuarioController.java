@@ -21,7 +21,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
 
-    @PostMapping("/cadastrar")
+    @PostMapping
     public Usuario cadastrar(@RequestBody UsuarioCadastroRequest request) {
         Usuario novoUsuario = usuarioService.cadastrar(request);
 
