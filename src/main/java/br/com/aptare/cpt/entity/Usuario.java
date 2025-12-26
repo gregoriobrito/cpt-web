@@ -13,7 +13,7 @@ public class Usuario {
     @Id
     @Column(name = "CD_USR")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_USR")
-    @SequenceGenerator(name = "SQ_UR", sequenceName = "SC_SGR.SQ_UR", allocationSize = 1)
+    @SequenceGenerator(name = "SQ_USR", sequenceName = "SC_SGR.SQ_USR", allocationSize = 1)
     private Long codigo;
 
     @Column(name = "NM_USR")

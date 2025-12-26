@@ -1,6 +1,10 @@
 package br.com.aptare.cpt.controller;
 
 import br.com.aptare.cpt.entity.Usuario;
+import br.com.aptare.cpt.request.UsuarioCadastroRequest;
+import br.com.aptare.cpt.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 import br.com.aptare.cpt.repository.UsuarioRepository;
 import br.com.aptare.cpt.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UsuarioController {
 
+    private final UsuarioService usuarioService;
+
+    @PostMapping("/cadastrar")
+    public Usuario cadastrar(@RequestBody UsuarioCadastroRequest request) {
+        Usuario novoUsuario = usuarioService.cadastrar(request);
+
+        novoUsuario.setSenha(null);
+        return novoUsuario;
+    }
+}
     private final UsuarioRepository usuarioRepository;
 
     @GetMapping
