@@ -2,16 +2,16 @@ package br.com.aptare.cpt.controller;
 
 import br.com.aptare.cpt.dto.PartidaDTO;
 import br.com.aptare.cpt.entity.Partida;
+import br.com.aptare.cpt.entity.VwPartida;
 import br.com.aptare.cpt.repository.PartidaRepository;
+import br.com.aptare.cpt.repository.VwPartidaRepository;
 import br.com.aptare.cpt.request.AtualizarPontoRequest;
 import br.com.aptare.cpt.request.PartidaRequest;
 import br.com.aptare.cpt.service.PartidaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/partida")
@@ -20,6 +20,7 @@ public class PartidaController {
 
     private final PartidaRepository partidaRepository;
     private final PartidaService partidaService;
+    private final VwPartidaRepository vwPartidaRepository;
 
     @GetMapping({"racha/{idRacha}", "racha/{idRacha}/{idPartida}"})
     public List<PartidaDTO> listarPartidas(
@@ -30,6 +31,14 @@ public class PartidaController {
                 .stream()
                 .map(PartidaDTO::fromEntity)
                 .toList();
+    }
+
+    @GetMapping({"v2/racha/{idRacha}", "v2/racha/{idRacha}/{idPartida}"})
+    public List<VwPartida> listarPartidasVw(
+            @PathVariable Long idRacha,
+            @PathVariable(name = "idPartida", required = false) Long idPartida) {
+
+        return vwPartidaRepository.listarPartidaRacha(idRacha, idPartida);
     }
 
     @PostMapping
