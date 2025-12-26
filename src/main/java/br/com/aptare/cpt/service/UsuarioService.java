@@ -21,14 +21,14 @@ public class UsuarioService {
     @Transactional
     public Usuario cadastrar(UsuarioCadastroRequest request) {
 
-        if (request.getLogin() != null && usuarioRepository.findByLogin(request.getLogin()).isPresent()) {
+        if (request.getLogin() != null && usuarioRepository.findByLogin(request.getLogin().toUpperCase().trim()).isPresent()) {
             throw new RuntimeException("Login já existente.");
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNome(request.getNome());
-        usuario.setApelido(request.getApelido());
-        usuario.setLogin(request.getLogin());
+        usuario.setNome(request.getNome().toUpperCase().trim());
+        usuario.setApelido(request.getApelido().toUpperCase().trim());
+        usuario.setLogin(request.getLogin().toUpperCase().trim());
 
         String senhaParaSalvar = (request.getSenha() != null && !request.getSenha().isEmpty())
                 ? request.getSenha()

@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/racha/**").permitAll()
                         .requestMatchers("/partida/**").permitAll()
+                        .requestMatchers("/usuario/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
