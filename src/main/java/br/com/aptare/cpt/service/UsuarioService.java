@@ -5,6 +5,7 @@ import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
 import br.com.aptare.cpt.repository.UsuarioRepository;
 import br.com.aptare.cpt.request.UsuarioCadastroRequest;
+import br.com.aptare.cpt.request.VincularRachaRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,5 +50,26 @@ public class UsuarioService {
         }
 
         return usuario;
+    }
+
+    @Transactional
+    public RachaUsuario vincularRachar(VincularRachaRequest request) {
+
+        Usuario retorno = usuarioRepository.findById(request.getCodigoUsuario()).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(request.getCodigoRacha(), retorno.getCodigo());
+
+        if (rachaUsuario != null) {
+            throw new RuntimeException("Este usuário já está vinculado a este racha");
+        }
+
+        rachaUsuario = new RachaUsuario();
+        rachaUsuario.setCodigoRacha(request.getCodigoRacha());
+        rachaUsuario.setCodigoUsuario(request.getCodigoUsuario());
+        rachaUsuario.setFlagAdministrador("N");
+        rachaUsuario.setSituacao(1); // ativo
+
+        rachaUsuarioRepository.save(rachaUsuario);
+
+        return rachaUsuario;
     }
 }
