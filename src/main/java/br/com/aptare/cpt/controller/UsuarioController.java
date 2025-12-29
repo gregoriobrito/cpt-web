@@ -62,4 +62,10 @@ public class UsuarioController {
         return usuarioService.vincularRachar(request);
     }
 
+    @PostMapping("desvincularRacha")
+    public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
+        rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
+        return request;
+    }
+
 }
