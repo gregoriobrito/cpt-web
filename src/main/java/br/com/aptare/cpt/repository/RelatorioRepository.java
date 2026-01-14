@@ -42,7 +42,7 @@ public interface RelatorioRepository extends Repository<Partida, Long> {
              where rch.cd_rch = :idRacha
                and prt.st_prt = 1
              group by descricao, nome, agrupador
-            order by agrupador desc, pontuacao desc
+            order by to_date(to_char(prt.dt_prt, 'dd/MM/yyyy'),'dd/MM/yyyy') desc, pontuacao desc
         """, nativeQuery = true)
     List<ResultadoDTO> listarRelatorioData(@Param("idRacha") Long idRacha);
 
@@ -59,7 +59,7 @@ public interface RelatorioRepository extends Repository<Partida, Long> {
              where rch.cd_rch = :idRacha
                and prt.st_prt = 1
              group by descricao, nome, agrupador
-            order by agrupador desc, pontuacao desc
+            order by to_date(to_char(prt.dt_prt, 'MM/yyyy'),'MM/yyyy') desc, pontuacao desc
         """, nativeQuery = true)
     List<ResultadoDTO> listarRelatorioMes(@Param("idRacha") Long idRacha);
 
@@ -76,7 +76,7 @@ public interface RelatorioRepository extends Repository<Partida, Long> {
              where rch.cd_rch = :idRacha
                and prt.st_prt = 1
              group by descricao, nome, agrupador
-            order by agrupador desc, pontuacao desc
+            order by to_date(to_char(prt.dt_prt, 'yyyy'),'yyyy') desc, pontuacao desc
         """, nativeQuery = true)
     List<ResultadoDTO> listarRelatorioAno(@Param("idRacha") Long idRacha);
 }
