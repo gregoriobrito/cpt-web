@@ -4,6 +4,7 @@ import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
 import br.com.aptare.cpt.repository.UsuarioRepository;
+import br.com.aptare.cpt.request.AlterarSenhaRequest;
 import br.com.aptare.cpt.request.EsqueciSenhaRequest;
 import br.com.aptare.cpt.request.UsuarioCadastroRequest;
 import br.com.aptare.cpt.request.VincularRachaRequest;
@@ -93,5 +94,23 @@ public class UsuarioService {
         System.out.println("### NOVA SENHA PROVISÓRIA: " + senhaProvisoria);
 
         return "Uma nova senha foi gerada. Verifique seu e-mail (ou o console do servidor).";
+    }
+
+    @Transactional
+    public void alterarSenha(Long codigoUsuario, AlterarSenhaRequest request) {
+
+        Usuario usuario = usuarioRepository.findById(codigoUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        if (!passwordEncoder.matches(request.getSenhaAtual(), usuario.getSenha())) {
+            throw new RuntimeException("A senha atual informada está incorreta.");
+        }
+
+        if (request.getNovaSenha() == null || request.getNovaSenha().isEmpty()) {
+            throw new RuntimeException("A nova senha não pode ser vazia.");
+        }
+
+        usuario.setSenha(passwordEncoder.encode(request.getNovaSenha()));
+        usuarioRepository.save(usuario);
     }
 }

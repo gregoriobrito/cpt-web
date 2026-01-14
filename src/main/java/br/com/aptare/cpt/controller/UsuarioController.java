@@ -3,7 +3,9 @@ package br.com.aptare.cpt.controller;
 import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
+import br.com.aptare.cpt.repository.UsuarioRepository;
 import br.com.aptare.cpt.request.EsqueciSenhaRequest;
+import br.com.aptare.cpt.request.AlterarSenhaRequest; // Certifique-se de ter criado esta classe
 import br.com.aptare.cpt.request.UsuarioCadastroRequest;
 import br.com.aptare.cpt.request.VincularRachaRequest;
 import br.com.aptare.cpt.service.UsuarioService;
@@ -11,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import br.com.aptare.cpt.repository.UsuarioRepository;
 import br.com.aptare.cpt.security.UserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,7 +49,6 @@ public class UsuarioController {
 
     @GetMapping({"buscarLogin/{idRacha}/{login}"})
     public Usuario buscarLogin(@PathVariable Long idRacha, @PathVariable String login) {
-
         Usuario retorno = usuarioRepository.findByLogin(login.toUpperCase()).orElseThrow(() -> new RuntimeException("Usuário não encontrada"));
         RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(idRacha, retorno.getCodigo());
 
@@ -56,7 +56,6 @@ public class UsuarioController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT,
                     "Este usuário já está vinculado a esse racha");
         }
-
         retorno.setSenha(null);
         return retorno;
     }
@@ -78,4 +77,17 @@ public class UsuarioController {
         return request;
     }
 
+    // --- NOVO ENDPOINT (Certifique-se que o servidor foi REINICIADO após colar isso) ---
+    @PostMapping("/alterar_senha")
+    public ResponseEntity<String> alterarSenha(@RequestBody AlterarSenhaRequest request) {
+
+        // Pega o usuário logado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+        // Chama o serviço
+        usuarioService.alterarSenha(user.getId(), request);
+
+        return ResponseEntity.ok("Senha alterada com sucesso!");
+    }
 }
