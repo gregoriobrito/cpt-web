@@ -6,14 +6,16 @@ import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaRepository;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
+import br.com.aptare.cpt.request.PartidaRequest;
+import br.com.aptare.cpt.request.RachaCadastrarRequest;
 import br.com.aptare.cpt.security.UserPrincipal;
+import br.com.aptare.cpt.service.RachaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class RachaController {
 
     private final RachaRepository rachaRepository;
     private final RachaUsuarioRepository rachaUsuarioRepository;
+    private final RachaService rachaService;
 
     @GetMapping
     public List<Racha> listarRacha() {
@@ -50,7 +53,15 @@ public class RachaController {
 
     @GetMapping("usuario/{id}")
     public List<Usuario> listarUsuario(@PathVariable Long id) {
-        // TODO validar se ta vinculado aquele racha
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+        RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(id, user.getId());
+
+        if (rachaUsuario == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Este usuário não tem acesso a este racha");
+        }
 
         // listar os rachas
         List<Usuario> listaUsuario = rachaRepository.listarUsuario(id);
@@ -60,5 +71,13 @@ public class RachaController {
             }
         }
         return listaUsuario;
+    }
+
+    @PostMapping
+    public void cadastrar(@RequestBody RachaCadastrarRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+        rachaService.cadastrar(request.getNome(), user.getId());
     }
 }

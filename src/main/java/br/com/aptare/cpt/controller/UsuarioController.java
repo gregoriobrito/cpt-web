@@ -73,6 +73,7 @@ public class UsuarioController {
       
     @PostMapping("desvincularRacha")
     public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
+        // TODO validar se o usuario que esta logado tem acesso adm do racha que vem do request
         rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
         return request;
     }
