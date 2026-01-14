@@ -4,12 +4,15 @@ import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
 import br.com.aptare.cpt.repository.UsuarioRepository;
+import br.com.aptare.cpt.request.EsqueciSenhaRequest;
 import br.com.aptare.cpt.request.UsuarioCadastroRequest;
 import br.com.aptare.cpt.request.VincularRachaRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +74,24 @@ public class UsuarioService {
         rachaUsuarioRepository.save(rachaUsuario);
 
         return rachaUsuario;
+    }
+
+    @Transactional
+    public String recuperarSenha(EsqueciSenhaRequest request) {
+
+        Usuario usuario = usuarioRepository.findByLogin(request.getLogin())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o login informado."));
+
+        String senhaProvisoria = UUID.randomUUID().toString().substring(0, 6);
+
+        usuario.setSenha(passwordEncoder.encode(senhaProvisoria));
+        usuarioRepository.save(usuario);
+
+        System.out.println("### RECUPERAÇÃO DE SENHA SOLICITADA");
+        System.out.println("### Usuário: " + usuario.getNome());
+        System.out.println("### Login: " + usuario.getLogin());
+        System.out.println("### NOVA SENHA PROVISÓRIA: " + senhaProvisoria);
+
+        return "Uma nova senha foi gerada. Verifique seu e-mail (ou o console do servidor).";
     }
 }

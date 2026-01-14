@@ -3,11 +3,12 @@ package br.com.aptare.cpt.controller;
 import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
-import br.com.aptare.cpt.request.PartidaRequest;
+import br.com.aptare.cpt.request.EsqueciSenhaRequest;
 import br.com.aptare.cpt.request.UsuarioCadastroRequest;
 import br.com.aptare.cpt.request.VincularRachaRequest;
 import br.com.aptare.cpt.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import br.com.aptare.cpt.repository.UsuarioRepository;
@@ -65,6 +66,11 @@ public class UsuarioController {
         return usuarioService.vincularRachar(request);
     }
 
+    @PostMapping("/esqueci_senha")
+    public ResponseEntity<String> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
+        String mensagem = usuarioService.recuperarSenha(request);
+        return ResponseEntity.ok(mensagem);
+      
     @PostMapping("desvincularRacha")
     public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
         rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
