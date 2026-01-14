@@ -9,6 +9,7 @@ import br.com.aptare.cpt.request.VincularRachaRequest;
 import br.com.aptare.cpt.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import br.com.aptare.cpt.repository.UsuarioRepository;
 import br.com.aptare.cpt.security.UserPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/usuario")
@@ -39,7 +41,7 @@ public class UsuarioController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
-        Usuario retorno = usuarioRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("Usuário não encontrada"));
+        Usuario retorno = usuarioRepository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT, "Usuário não encontrada"));
         retorno.setSenha(null);
         return retorno;
     }
@@ -51,7 +53,8 @@ public class UsuarioController {
         RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(idRacha, retorno.getCodigo());
 
         if (rachaUsuario != null) {
-            throw new RuntimeException("Este usuário já está vinculado a esse racha");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT,
+                    "Este usuário já está vinculado a esse racha");
         }
 
         retorno.setSenha(null);
@@ -67,6 +70,11 @@ public class UsuarioController {
     public ResponseEntity<String> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
         String mensagem = usuarioService.recuperarSenha(request);
         return ResponseEntity.ok(mensagem);
+      
+    @PostMapping("desvincularRacha")
+    public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
+        rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
+        return request;
     }
 
 }
