@@ -70,6 +70,7 @@ public class UsuarioController {
     public ResponseEntity<String> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
         String mensagem = usuarioService.recuperarSenha(request);
         return ResponseEntity.ok(mensagem);
+    }
       
     @PostMapping("desvincularRacha")
     public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
