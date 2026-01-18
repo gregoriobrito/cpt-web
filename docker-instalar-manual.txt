@@ -2,6 +2,6 @@
 docker build -t cpt-web .
 
 2.
-docker run --name cpt-web \
+docker run -d --name cpt-web \
   -p 8087:8080 \
   cpt-web
