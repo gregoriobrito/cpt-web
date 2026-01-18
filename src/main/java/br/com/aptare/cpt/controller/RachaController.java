@@ -12,6 +12,7 @@ import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.RachaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -79,5 +80,18 @@ public class RachaController {
         UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
         rachaService.cadastrar(request.getNome(), user.getId());
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        // 1. Pega o usuário logado (quem está tentando excluir)
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+        // 2. Chama o serviço passando o ID do racha e o ID do usuário para validar admin
+        rachaService.excluir(id, user.getId());
+
+        // 3. Retorna sucesso (204 No Content)
+        return ResponseEntity.noContent().build();
     }
 }
