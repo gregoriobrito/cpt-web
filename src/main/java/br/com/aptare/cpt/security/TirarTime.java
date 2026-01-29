@@ -12,8 +12,8 @@ public class TirarTime {
     }
 
     public static void tirarTimeDuplasAleatorias() {
-        String[] grupoA = new String[]{"thiago", "juliel", "weslley", "italo", "diego"};
-        String[] grupoB = new String[]{"rho", "wan", "gus", "may", "ligia"};
+        String[] grupoA = new String[]{"thiago", "juliel", "greg", "italo", "rick"};
+        String[] grupoB = new String[]{"rho", "wan", "jess", "ligia", "may"};
         List<Integer[]> listaTotalPartidas = new ArrayList<Integer[]>();
         List<Integer[]> listaFinalPartidas = new ArrayList<Integer[]>();
 

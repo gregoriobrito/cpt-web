@@ -88,11 +88,6 @@ public class UsuarioService {
         usuario.setSenha(passwordEncoder.encode(senhaProvisoria));
         usuarioRepository.save(usuario);
 
-        System.out.println("### RECUPERAÇÃO DE SENHA SOLICITADA");
-        System.out.println("### Usuário: " + usuario.getNome());
-        System.out.println("### Login: " + usuario.getLogin());
-        System.out.println("### NOVA SENHA PROVISÓRIA: " + senhaProvisoria);
-
         return "Uma nova senha foi gerada. Verifique seu e-mail (ou o console do servidor).";
     }
 

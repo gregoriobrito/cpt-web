@@ -1,6 +1,7 @@
 package br.com.aptare.cpt.repository;
 
 import br.com.aptare.cpt.dto.RachaDTO;
+import br.com.aptare.cpt.dto.UsuarioDTO;
 import br.com.aptare.cpt.entity.Racha;
 import br.com.aptare.cpt.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,5 +50,21 @@ public interface RachaRepository extends JpaRepository<Racha, Long> {
             order by rch.nm_rch
             """, nativeQuery = true)
     RachaDTO get(@Param("idRacha") Long idRacha, @Param("idUsuario") Long idUsuario);
+
+    @Query(value = """
+            select distinct usr.cd_usr as codigo,
+                            usr.nm_usr as nome,
+                            usr.apl_usr as apelido,
+                            usr.lgn_usr as login,
+                            rus.fg_adm_rch_usr as flagUsuarioAdmin
+            from sc_rch.tbl_rch rch 
+              inner join sc_rch.tbl_rch_usr rus on rus.cd_rch = rch.cd_rch 
+              inner join sc_sgr.tbl_usr usr on usr.cd_usr = rus.cd_usr 
+            where rch.st_rch = 1 
+              and rus.st_rch_usr = 1 
+              and usr.st_usr = 1 
+              and rch.cd_rch = :idRacha 
+            order by usr.nm_usr """, nativeQuery = true)
+    List<UsuarioDTO> listarUsuarioV2(@Param("idRacha") Long idRacha);
 
 }

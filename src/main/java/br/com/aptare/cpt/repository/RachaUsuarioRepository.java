@@ -37,4 +37,9 @@ public interface RachaUsuarioRepository extends JpaRepository<RachaUsuario, Long
             """, nativeQuery = true)
     List<RachaDTO> listarPorUsuario(@Param("idUsuario") Long idUsuario);
 
+    @Modifying
+    @Transactional
+    @Query("update RachaUsuario p set p.flagAdministrador = :administrador where p.codigoRacha = :idRacha and p.codigoUsuario = :idUsuario")
+    int tornarRetirarAdministrador(@Param("idRacha") Long idRacha, @Param("idUsuario") Long idUsuario, @Param("administrador") String administrador);
+
 }

@@ -1,12 +1,12 @@
 package br.com.aptare.cpt.controller;
 
 import br.com.aptare.cpt.dto.RachaDTO;
+import br.com.aptare.cpt.dto.UsuarioDTO;
 import br.com.aptare.cpt.entity.Racha;
 import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaRepository;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
-import br.com.aptare.cpt.request.PartidaRequest;
 import br.com.aptare.cpt.request.RachaCadastrarRequest;
 import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.RachaService;
@@ -74,6 +74,20 @@ public class RachaController {
         return listaUsuario;
     }
 
+    @GetMapping("usuario/v2/{id}")
+    public List<UsuarioDTO> listarUsuarioV2(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+        RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(id, user.getId());
+
+        if (rachaUsuario == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este usuário não tem acesso a este racha");
+        }
+
+        return rachaRepository.listarUsuarioV2(id);
+    }
+
     @PostMapping
     public void cadastrar(@RequestBody RachaCadastrarRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -84,14 +98,11 @@ public class RachaController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        // 1. Pega o usuário logado (quem está tentando excluir)
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
-        // 2. Chama o serviço passando o ID do racha e o ID do usuário para validar admin
         rachaService.excluir(id, user.getId());
 
-        // 3. Retorna sucesso (204 No Content)
         return ResponseEntity.noContent().build();
     }
 }
