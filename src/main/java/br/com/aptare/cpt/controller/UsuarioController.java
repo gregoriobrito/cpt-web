@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
@@ -28,69 +30,100 @@ public class UsuarioController {
     private final RachaUsuarioRepository rachaUsuarioRepository;
 
     @PostMapping("cadastrar")
-    public Usuario cadastrar(@RequestBody UsuarioCadastroRequest request) {
-        Usuario novoUsuario = usuarioService.cadastrar(request);
-        novoUsuario.setSenha(null);
-        return novoUsuario;
+    public ResponseEntity<?> cadastrar(@RequestBody UsuarioCadastroRequest request) {
+        try {
+            Usuario novoUsuario = usuarioService.cadastrar(request);
+            novoUsuario.setSenha(null);
+            return ResponseEntity.ok(novoUsuario);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping
-    public Usuario get() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+    public ResponseEntity<?> get() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
-        Usuario retorno = usuarioRepository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT, "Usuário não encontrada"));
-        retorno.setSenha(null);
-        return retorno;
+            Usuario retorno = usuarioRepository.findById(user.getId()).orElseThrow(() -> new Exception("Usuário não encontrada"));
+            retorno.setSenha(null);
+            return ResponseEntity.ok(retorno);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping({"buscarLogin/{idRacha}/{login}"})
-    public Usuario buscarLogin(@PathVariable Long idRacha, @PathVariable String login) {
-        Usuario retorno = usuarioRepository.findByLogin(login.toUpperCase()).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(idRacha, retorno.getCodigo());
+    public ResponseEntity<?> buscarLogin(@PathVariable Long idRacha, @PathVariable String login) {
+        try {
+            Usuario retorno = usuarioRepository.findByLogin(login.toUpperCase()).orElseThrow(() -> new Exception("Usuário não encontrado"));
+            RachaUsuario rachaUsuario = rachaUsuarioRepository.findByRachaUsuario(idRacha, retorno.getCodigo());
 
-        if (rachaUsuario != null) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT,
-                    "Este usuário já está vinculado a esse racha");
+            if (rachaUsuario != null) {
+                throw new Exception("Este usuário já está vinculado a esse racha");
+            }
+            retorno.setSenha(null);
+            return ResponseEntity.ok(retorno);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-        retorno.setSenha(null);
-        return retorno;
     }
 
     @PostMapping("vincularRacha")
-    public RachaUsuario vincularRacha(@RequestBody VincularRachaRequest request) {
-        return usuarioService.vincularRachar(request);
+    public ResponseEntity<?> vincularRacha(@RequestBody VincularRachaRequest request) {
+        try {
+            return ResponseEntity.ok(usuarioService.vincularRachar(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PostMapping("/recuperarSenha")
-    public ResponseEntity<String> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
-        String mensagem = usuarioService.recuperarSenha(request);
-        return ResponseEntity.ok(mensagem);
+    public ResponseEntity<?> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
+        try {
+            String mensagem = usuarioService.recuperarSenha(request);
+            return ResponseEntity.ok(mensagem);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
       
     @PostMapping("desvincularRacha")
-    public VincularRachaRequest desvincularRacha(@RequestBody VincularRachaRequest request) {
+    public ResponseEntity<?> desvincularRacha(@RequestBody VincularRachaRequest request) {
 
         // TODO validar se o usuario que esta logado tem acesso adm do racha que vem do request
-        rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
-        return request;
+        try {
+            rachaUsuarioRepository.desvincularRacha(request.getCodigoRacha(), request.getCodigoUsuario());
+            return ResponseEntity.ok(request);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PostMapping("tornarRetirarAdministrador")
-    public UsuarioAdministradorRequest tornarRetirarAdministrador(@RequestBody UsuarioAdministradorRequest request) {
+    public ResponseEntity<?> tornarRetirarAdministrador(@RequestBody UsuarioAdministradorRequest request) {
 
         // TODO validar se o usuario que esta logado tem acesso adm do racha que vem do request
-        rachaUsuarioRepository.tornarRetirarAdministrador(request.getCodigoRacha(), request.getCodigoUsuario(), request.getFlagAdministrador());
-        return request;
+        try {
+            rachaUsuarioRepository.tornarRetirarAdministrador(request.getCodigoRacha(), request.getCodigoUsuario(), request.getFlagAdministrador());
+            return ResponseEntity.ok(request);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PostMapping("/alterarSenha")
-    public ResponseEntity<String> alterarSenha(@RequestBody AlterarSenhaRequest request) {
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterarSenhaRequest request) {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
-        usuarioService.alterarSenha(user.getId(), request);
-        return ResponseEntity.ok("Senha alterada com sucesso!");
+            usuarioService.alterarSenha(user.getId(), request);
+            return ResponseEntity.ok("Senha alterada com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 }

@@ -14,7 +14,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private final String secret = "ff28d7ba-810e-4489-8ce6-b1c8885b5246";
-    private final long expirationMs = 3600000*24; // 24h
+    private final long expirationMs = 1000L * 60 * 60 * 24 * 30; // 30 dias
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
