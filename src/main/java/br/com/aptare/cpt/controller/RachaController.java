@@ -100,13 +100,16 @@ public class RachaController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
-
-        rachaService.excluir(id, user.getId());
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> excluir(@PathVariable Long id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+            rachaService.excluir(id, user.getId());
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping("informacoesUsuario/{id}")
@@ -115,6 +118,19 @@ public class RachaController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             UserPrincipal user = (UserPrincipal) auth.getPrincipal();
             return ResponseEntity.ok(timeUsuarioRepository.informacoesUsuario(id, user.getId()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("usuarioSair/{id}")
+    public ResponseEntity<?> usuarioSair(@PathVariable Long id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+            rachaService.usuarioSair(id, user.getId());
+            return ResponseEntity.noContent().build();
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

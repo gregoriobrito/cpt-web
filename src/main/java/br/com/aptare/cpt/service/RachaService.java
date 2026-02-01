@@ -55,4 +55,16 @@ public class RachaService {
         racha.setSituacao(2);
         rachaRepository.save(racha);
     }
+
+    @Transactional
+    public void usuarioSair(Long codigoRacha, Long codigoUsuarioSolicitante) {
+        RachaUsuario vinculo = rachaUsuarioRepository.findByRachaUsuario(codigoRacha, codigoUsuarioSolicitante);
+
+        if (vinculo == null) {
+            throw new RuntimeException("Você não faz parte deste grupo.");
+        }
+
+        vinculo.setSituacao(2);
+        rachaUsuarioRepository.save(vinculo);
+    }
 }
