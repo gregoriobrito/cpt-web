@@ -7,6 +7,7 @@ import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaRepository;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
+import br.com.aptare.cpt.repository.TimeUsuarioRepository;
 import br.com.aptare.cpt.request.RachaCadastrarRequest;
 import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.RachaService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/racha")
@@ -28,6 +30,7 @@ public class RachaController {
     private final RachaRepository rachaRepository;
     private final RachaUsuarioRepository rachaUsuarioRepository;
     private final RachaService rachaService;
+    private final TimeUsuarioRepository timeUsuarioRepository;
 
     @GetMapping
     public List<Racha> listarRacha() {
@@ -104,5 +107,17 @@ public class RachaController {
         rachaService.excluir(id, user.getId());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("informacoesUsuario/{id}")
+    public ResponseEntity<?> informacoesUsuario(@PathVariable Long id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+            return ResponseEntity.ok(timeUsuarioRepository.informacoesUsuario(id, user.getId()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 }
