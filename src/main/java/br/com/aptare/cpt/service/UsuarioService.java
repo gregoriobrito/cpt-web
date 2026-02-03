@@ -4,10 +4,7 @@ import br.com.aptare.cpt.entity.RachaUsuario;
 import br.com.aptare.cpt.entity.Usuario;
 import br.com.aptare.cpt.repository.RachaUsuarioRepository;
 import br.com.aptare.cpt.repository.UsuarioRepository;
-import br.com.aptare.cpt.request.AlterarSenhaRequest;
-import br.com.aptare.cpt.request.EsqueciSenhaRequest;
-import br.com.aptare.cpt.request.UsuarioCadastroRequest;
-import br.com.aptare.cpt.request.VincularRachaRequest;
+import br.com.aptare.cpt.request.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,6 +103,27 @@ public class UsuarioService {
         }
 
         usuario.setSenha(passwordEncoder.encode(request.getNovaSenha()));
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void alterar(UsuarioAlterarRequest request) {
+
+        Usuario usuario = usuarioRepository.findById(request.getCodigo())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        // verificar se existe este login com outro usuario
+        Usuario usuarioLogin = usuarioRepository.usuarioCodigoLogin(request.getCodigo(), request.getLogin().toUpperCase().trim());
+
+        if (usuarioLogin != null) {
+            throw new RuntimeException("Este login pertence a outro usuário.");
+        }
+
+        // atualizar dados
+        usuario.setApelido(request.getApelido().toUpperCase().trim());
+        usuario.setNome(request.getNome().toUpperCase().trim());
+        usuario.setLogin(request.getLogin().toUpperCase().trim());
+
         usuarioRepository.save(usuario);
     }
 }

@@ -15,5 +15,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("select u from Usuario u where u.codigo in (:idUsuario)")
     List<Usuario> listarIn(@Param("idUsuario") List<Long> idUsuario);
 
+    @Query("select u from Usuario u where u.codigo <> :idUsuario and login = :loginUsuario")
+    Usuario usuarioCodigoLogin(@Param("idUsuario") Long idUsuario, @Param("loginUsuario") String loginUsuario);
+
 
 }

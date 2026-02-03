@@ -121,4 +121,18 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
+
+    @PostMapping("alterar")
+    public ResponseEntity<?> alterar(@RequestBody UsuarioAlterarRequest request) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+            request.setCodigo(user.getId());
+            usuarioService.alterar(request);
+            return ResponseEntity.ok("Perfil atualizado com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 }
