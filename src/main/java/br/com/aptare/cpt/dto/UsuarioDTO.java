@@ -17,11 +17,14 @@ public class UsuarioDTO {
 
     private String flagUsuarioAdmin;
 
-    public UsuarioDTO(BigDecimal codigo, String nome, String apelido, String login, Character flagUsuarioAdmin) {
+    private String flagImagem;
+
+    public UsuarioDTO(BigDecimal codigo, String nome, String apelido, String login, Character flagUsuarioAdmin, String flagImagem) {
         this.codigo = codigo.longValue();
         this.nome = nome;
         this.apelido = apelido;
         this.login = login;
         this.flagUsuarioAdmin = flagUsuarioAdmin.toString();
+        this.flagImagem = flagImagem;
     }
 }

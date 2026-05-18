@@ -8,11 +8,19 @@ import br.com.aptare.cpt.request.*;
 import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @RestController
@@ -23,6 +31,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
     private final RachaUsuarioRepository rachaUsuarioRepository;
+    private final String pathImagem = "/cpt/imagens/";
 
     @PostMapping("cadastrar")
     public ResponseEntity<?> cadastrar(@RequestBody UsuarioCadastroRequest request) {
@@ -43,6 +52,14 @@ public class UsuarioController {
 
             Usuario retorno = usuarioRepository.findById(user.getId()).orElseThrow(() -> new Exception("Usuário não encontrada"));
             retorno.setSenha(null);
+
+            retorno.setFlagImagem("N");
+            Path path = Paths.get(pathImagem + retorno.getCodigo() + ".jpg");
+            Resource resource = new UrlResource(path.toUri());
+            if (resource.exists()) {
+                retorno.setFlagImagem("S");
+            }
+
             return ResponseEntity.ok(retorno);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
@@ -132,6 +149,48 @@ public class UsuarioController {
             usuarioService.alterar(request);
             return ResponseEntity.ok("Perfil atualizado com sucesso");
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("imagemPerfil/{id}")
+    public ResponseEntity<Resource> imagemPerfil(@PathVariable Long id) {
+
+        try {
+            Path path = Paths.get(pathImagem + id + ".jpg");
+
+            Resource resource = new UrlResource(path.toUri());
+
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+
+        } catch (IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("imagemPerfil")
+    public ResponseEntity<?> uploadFoto(@RequestParam("foto") MultipartFile arquivo) {
+
+        try {
+            if (arquivo.isEmpty()) {
+                return ResponseEntity.badRequest().body("Arquivo vazio");
+            }
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+
+            String nomeArquivo = user.getId() + ".jpg";
+
+            Path caminho = Paths.get(pathImagem, nomeArquivo);
+            Files.write(caminho, arquivo.getBytes());
+
+            return ResponseEntity.ok("Foto salva com sucesso");
+        }
+        catch (IOException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }

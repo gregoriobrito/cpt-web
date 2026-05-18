@@ -4,4 +4,5 @@ docker build -t cpt-web .
 2.
 docker run -d --name cpt-web \
   -p 8087:8080 \
+  -v /opt/cpt/imagens:/cpt/imagens \
   cpt-web

@@ -56,7 +56,8 @@ public interface RachaRepository extends JpaRepository<Racha, Long> {
                             usr.nm_usr as nome,
                             usr.apl_usr as apelido,
                             usr.lgn_usr as login,
-                            rus.fg_adm_rch_usr as flagUsuarioAdmin
+                            rus.fg_adm_rch_usr as flagUsuarioAdmin,
+                            'N' as flagImagem
             from sc_rch.tbl_rch rch 
               inner join sc_rch.tbl_rch_usr rus on rus.cd_rch = rch.cd_rch 
               inner join sc_sgr.tbl_usr usr on usr.cd_usr = rus.cd_usr 

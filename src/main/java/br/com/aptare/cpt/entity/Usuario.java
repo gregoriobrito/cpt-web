@@ -30,4 +30,7 @@ public class Usuario {
 
     @Column(name = "SNH_USR")
     private String senha;
+
+    @Transient
+    private String flagImagem;
 }
