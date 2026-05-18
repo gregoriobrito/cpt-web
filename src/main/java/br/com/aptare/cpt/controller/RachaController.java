@@ -12,6 +12,8 @@ import br.com.aptare.cpt.request.RachaCadastrarRequest;
 import br.com.aptare.cpt.security.UserPrincipal;
 import br.com.aptare.cpt.service.RachaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +35,7 @@ public class RachaController {
     private final RachaUsuarioRepository rachaUsuarioRepository;
     private final RachaService rachaService;
     private final TimeUsuarioRepository timeUsuarioRepository;
+    private final String pathImagem = "/cpt/imagens/";
 
     @GetMapping
     public List<Racha> listarRacha() {
@@ -88,7 +93,23 @@ public class RachaController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este usuário não tem acesso a este racha");
         }
 
-        return rachaRepository.listarUsuarioV2(id);
+        Resource resource = null;
+        Path path = null;
+
+        List<UsuarioDTO> usuarioDTOS = rachaRepository.listarUsuarioV2(id);
+        if (usuarioDTOS != null
+            && !usuarioDTOS.isEmpty()) {
+            for (UsuarioDTO usuario : usuarioDTOS) {
+                usuario.setFlagImagem("N");
+                path = Paths.get(pathImagem + usuario.getCodigo() + ".jpg");
+                try {
+                    resource = new UrlResource(path.toUri());
+                    if (resource.exists()) usuario.setFlagImagem("S");
+                } catch (Exception e) {}
+            }
+        }
+
+        return usuarioDTOS;
     }
 
     @PostMapping
