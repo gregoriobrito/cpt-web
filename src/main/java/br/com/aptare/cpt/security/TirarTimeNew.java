@@ -43,8 +43,8 @@ public class TirarTimeNew {
 
     public static void gerarTabela() {
 
-        String[] grupoA = {"greg", "juliel", "huan", "rick", "diego"};
-        String[] grupoB = {"wan", "rho", "ligia", "jess", "gus"};
+        String[] grupoA = {"greg", "mateus", "pinto", "rick", "edu"};
+        String[] grupoB = {"wan", "dani", "jess", "gus", "erasmo"};
 
         int MAX_PARTIDAS = grupoA.length;
         int MIN_PARTIDAS = grupoA.length - 1;

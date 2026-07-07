@@ -40,6 +40,9 @@ public class Partida {
     @Column(name = "ST_PRT")
     private Integer situacao;
 
+    @Column(name = "DT_LMT_PRT")
+    private Date dataLimite;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "CD_PRT", insertable = false, updatable = false)
     @JsonManagedReference

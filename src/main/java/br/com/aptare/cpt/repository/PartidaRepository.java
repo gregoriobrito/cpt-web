@@ -1,7 +1,6 @@
 package br.com.aptare.cpt.repository;
 
 import br.com.aptare.cpt.entity.Partida;
-import br.com.aptare.cpt.entity.Time;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

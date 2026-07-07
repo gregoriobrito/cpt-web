@@ -24,6 +24,10 @@ public class GrupoUsuario {
     @Column(name = "CD_USR")
     private Long codigoUsuario;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CD_USR", insertable = false, updatable = false)
+    private Usuario usuario;
+
     @Column(name = "ST_GRP_USR")
     private Integer situacao;
 

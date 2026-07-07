@@ -23,6 +23,21 @@ public class Time {
     @Column(name = "PNT_TIM")
     private Integer pontuacao;
 
+    @Column(name = "PNT_EXT_TIM")
+    private Integer pontuacaoExtra;
+
+    @Column(name = "PNT2_TIM")
+    private Integer pontuacao2;
+
+    @Column(name = "PNT2_EXT_TIM")
+    private Integer pontuacaoExtra2;
+
+    @Column(name = "PNT3_TIM")
+    private Integer pontuacao3;
+
+    @Column(name = "PNT3_EXT_TIM")
+    private Integer pontuacaoExtra3;
+
     @Column(name = "CD_PRT")
     private Long codigoPartida;
 

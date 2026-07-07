@@ -4,6 +4,7 @@ import br.com.aptare.cpt.entity.Partida;
 import br.com.aptare.cpt.entity.Time;
 import br.com.aptare.cpt.entity.TimeUsuario;
 import br.com.aptare.cpt.entity.Usuario;
+import br.com.aptare.cpt.enums.PartidaSituacaoEnum;
 import br.com.aptare.cpt.repository.PartidaRepository;
 import br.com.aptare.cpt.repository.TimeRepository;
 import br.com.aptare.cpt.repository.TimeUsuarioRepository;
@@ -52,7 +53,7 @@ public class PartidaService {
         partida.setCodigoRacha(request.getCodigoRacha());
         partida.setIdentificador(String.format("%02d", quantidade) + " - " + dataFormatada);
         partida.setData(new Date());
-        partida.setSituacao(1);
+        partida.setSituacao(PartidaSituacaoEnum.CADASTRADO.getValor());
 
         partida = partidaRepository.save(partida);
 
@@ -86,6 +87,11 @@ public class PartidaService {
                 Time time = new Time();
                 time.setCodigoPartida(partida.getCodigo());
                 time.setPontuacao(0);
+                time.setPontuacaoExtra(0);
+                time.setPontuacao2(0);
+                time.setPontuacaoExtra2(0);
+                time.setPontuacao3(0);
+                time.setPontuacaoExtra3(0);
                 time.setIdentificador(nomeTime);
                 time.setSituacao(1);
 
@@ -106,7 +112,6 @@ public class PartidaService {
             }
         }
 
-        //partida.setIdentificador(String.format("%02d", quantidade) + " - " + nomePartida);
         partida.setIdentificador(nomePartida);
         partida = partidaRepository.save(partida);
 
@@ -123,6 +128,12 @@ public class PartidaService {
                 Time time = timeRepository.findById(elemento.getIdTime())
                         .orElseThrow(() -> new RuntimeException("Time não encontrado com id: " + elemento.getIdTime()));
                 time.setPontuacao(elemento.getPontos());
+                time.setPontuacaoExtra(elemento.getPontosExtra());
+                time.setPontuacao2(elemento.getPontos2());
+                time.setPontuacaoExtra2(elemento.getPontosExtra2());
+                time.setPontuacao3(elemento.getPontos3());
+                time.setPontuacaoExtra3(elemento.getPontosExtra3());
+
                 timeRepository.save(time);
                 codigoPartida = time.getCodigoPartida();
             }
