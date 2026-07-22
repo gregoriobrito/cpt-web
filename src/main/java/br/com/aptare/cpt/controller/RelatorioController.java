@@ -7,11 +7,15 @@ import br.com.aptare.cpt.entity.Racha;
 import br.com.aptare.cpt.repository.RachaRepository;
 import br.com.aptare.cpt.repository.RelatorioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +26,7 @@ public class RelatorioController {
 
     private final RelatorioRepository relatorioRepository;
     private final RachaRepository rachaRepository;
+    private final String pathImagem = "/cpt/imagens/";
 
     @GetMapping("geral/{idRacha}")
     public RelatorioDTO relatorioGeral(@PathVariable Long idRacha) {
@@ -44,7 +49,7 @@ public class RelatorioController {
             retorno.getLista().add(add);
         }
 
-        return retorno;
+        return carregarImagemUsuario(retorno);
     }
 
     @GetMapping("data/{idRacha}")
@@ -94,7 +99,33 @@ public class RelatorioController {
             }
         }
 
-        return retorno;
+        return carregarImagemUsuario(retorno);
+    }
+
+    private RelatorioDTO carregarImagemUsuario(RelatorioDTO relatorio) {
+        Resource resource = null;
+        Path path = null;
+
+        if (relatorio != null
+                && relatorio.getLista() != null
+                && !relatorio.getLista().isEmpty()) {
+            for (ResultadoAgrupadoDTO eAgrupado : relatorio.getLista()) {
+
+                if (eAgrupado != null
+                        && !eAgrupado.getListaResultado().isEmpty()) {
+                    for (ResultadoDTO usuario : eAgrupado.getListaResultado()) {
+                        path = Paths.get(pathImagem + usuario.getCodigo() + ".jpg");
+                        try {
+                            resource = new UrlResource(path.toUri());
+                            if (resource.exists()) usuario.setFlagImagem("S");
+                        } catch (Exception e) {}
+                    }
+                }
+
+            }
+        }
+
+        return relatorio;
     }
 
 }

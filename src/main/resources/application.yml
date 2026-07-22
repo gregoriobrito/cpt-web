@@ -3,13 +3,13 @@ spring:
   application:
     name: cpt-web
   datasource:
-    url: jdbc:postgresql://localhost:5432/cpt
+    url: jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:5432/cpt
     driverClassName: org.postgresql.Driver
-    username: cpt
-    password: cpt
+    username: postgres.ekpwvnrxdrqigvjripkx
+    password: "*GB_supabase713"
     hikari:
       maximum-pool-size: '3'
 
   jpa:
-    show-sql: 'true'
+    show-sql: 'false'
     database-platform: org.hibernate.dialect.PostgreSQLDialect

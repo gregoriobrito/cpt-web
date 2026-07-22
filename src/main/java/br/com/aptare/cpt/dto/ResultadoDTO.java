@@ -17,11 +17,17 @@ public class ResultadoDTO {
 
     private BigDecimal pontuacao;
 
-    public ResultadoDTO(String agrupador, String apelido, String nome, BigDecimal pontuacao) {
+    private Long codigo;
+
+    private String flagImagem;
+
+    public ResultadoDTO(String agrupador, String apelido, String nome, BigDecimal pontuacao, BigDecimal codigo, String flagImagem) {
         this.apelido = apelido;
         this.pontuacao = pontuacao;
         this.agrupador = agrupador;
         this.nome = nome;
+        this.codigo = codigo.longValue();
+        this.flagImagem = flagImagem;
     }
 
 }
